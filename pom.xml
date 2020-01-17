@@ -95,6 +95,7 @@
     </dependency>
     
     <!-- mtj library modified by Weka authors -->
+    <!--
     <dependency>
       <groupId>com.googlecode.matrix-toolkits-java</groupId>
       <artifactId>mtj</artifactId>
@@ -102,7 +103,7 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
-
+-->
     <dependency>
         <groupId>com.github.ptrajdos</groupId>
         <artifactId>WekaTools</artifactId>
