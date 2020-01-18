@@ -95,7 +95,7 @@
     </dependency>
     
     <!-- mtj library modified by Weka authors -->
-    <!--
+    <!--Travis do not see local repo. Why?
     <dependency>
       <groupId>com.googlecode.matrix-toolkits-java</groupId>
       <artifactId>mtj</artifactId>
