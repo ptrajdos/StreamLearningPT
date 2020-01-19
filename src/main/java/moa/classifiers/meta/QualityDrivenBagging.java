@@ -3,12 +3,13 @@
  */
 package moa.classifiers.meta;
 
+import java.util.Arrays;
+
+import com.github.javacliparser.IntOption;
 import com.yahoo.labs.samoa.instances.Instance;
 
 import moa.capabilities.CapabilitiesHandler;
-import moa.classifiers.AbstractClassifier;
 import moa.classifiers.MultiClassClassifier;
-import moa.core.Measurement;
 
 /**
  * @author pawel trajdos
@@ -16,55 +17,48 @@ import moa.core.Measurement;
  * @version 0.0.1
  *
  */
-public class QualityDrivenBagging extends AbstractClassifier implements MultiClassClassifier, CapabilitiesHandler {
+public class QualityDrivenBagging extends OzaBag implements MultiClassClassifier, CapabilitiesHandler {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6536938183472821463L;
-
+	private static final long serialVersionUID = 5849789559439763278L;
+	
 	/**
-	 * 
+	 * Options
 	 */
-	public QualityDrivenBagging() {
-		// TODO Auto-generated constructor stub
-	}
+	
+	public IntOption chunkSizeOption = new IntOption("chunkSize", 'c', "The chunk size used for classifier creation and evaluation.", 500, 1, Integer.MAX_VALUE);
+	
+	/**
+	 * Variables
+	 */
+	
+	protected boolean[] activeClassifiers;
 
-	@Override
-	public boolean isRandomizable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public double[] getVotesForInstance(Instance inst) {
-		// TODO Auto-generated method stub
-		int numClasses= inst.dataset().numClasses();
-		return new double[numClasses];
-	}
-
+	/* (non-Javadoc)
+	 * @see moa.classifiers.meta.OzaBag#resetLearningImpl()
+	 */
 	@Override
 	public void resetLearningImpl() {
-		// TODO Auto-generated method stub
-		
+		super.resetLearningImpl();
+		this.activeClassifiers = new boolean[this.ensemble.length];
 	}
 
+	/* (non-Javadoc)
+	 * @see moa.classifiers.meta.OzaBag#getVotesForInstance(com.yahoo.labs.samoa.instances.Instance)
+	 */
 	@Override
-	public void trainOnInstanceImpl(Instance inst) {
-		// TODO Auto-generated method stub
+	public double[] getVotesForInstance(Instance inst) {
 		
+		return super.getVotesForInstance(inst);
 	}
+	
+	
+	
+	
+	
 
-	@Override
-	protected Measurement[] getModelMeasurementsImpl() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void getModelDescription(StringBuilder out, int indent) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
