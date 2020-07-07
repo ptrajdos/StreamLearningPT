@@ -2,18 +2,21 @@ package moa.classifiers.meta;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import moa.classifiers.AbstractMultipleClassifierTestCase;
 import moa.classifiers.Classifier;
 
-public class OnlineAccuracyUpdatedEnsembleSTest extends OnlineAccuracyUpdatedEnsembleTest {
+public class OnlineQualityUpdatedEnsembleTest extends AbstractMultipleClassifierTestCase {
 
-	public OnlineAccuracyUpdatedEnsembleSTest(String name) {
+	public OnlineQualityUpdatedEnsembleTest(String name) {
 		super(name);
+		this.setNumberTests(1);
 	}
 
 	@Override
 	protected Classifier[] getRegressionClassifierSetups() {
-		return new Classifier[] {new OnlineAccuracyUpdatedEnsembleS()};
+		return new Classifier[] {new OnlineQualityUpdatedEnsemble()};
 	}
+	
 	
 	 /**
 	   * Returns a test suite.
@@ -21,7 +24,7 @@ public class OnlineAccuracyUpdatedEnsembleSTest extends OnlineAccuracyUpdatedEns
 	   * @return		the test suite
 	   */
 	  public static Test suite() {
-	    return new TestSuite(OnlineAccuracyUpdatedEnsembleSTest.class);
+	    return new TestSuite(OnlineQualityUpdatedEnsembleTest.class);
 	  }
 
 	  /**
@@ -32,7 +35,5 @@ public class OnlineAccuracyUpdatedEnsembleSTest extends OnlineAccuracyUpdatedEns
 	  public static void main(String[] args) {
 	    runTest(suite());
 	  }
-
-	
 
 }

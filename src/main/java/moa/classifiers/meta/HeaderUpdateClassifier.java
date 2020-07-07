@@ -10,10 +10,10 @@ import com.yahoo.labs.samoa.instances.InstancesHeader;
  * Class that initializes header information for base classifier
  * @author pawel trajdos
  * @since 0.0.1
- * @version 0.0.1
+ * @version 0.0.2
  *
  */
-public class HeaderUodateClassifier extends SingleClassifierEnhancer {
+public class HeaderUpdateClassifier extends SingleClassifierEnhancer {
 
 	/**
 	 * 
@@ -23,7 +23,7 @@ public class HeaderUodateClassifier extends SingleClassifierEnhancer {
 	/**
 	 * 
 	 */
-	public HeaderUodateClassifier() {
+	public HeaderUpdateClassifier() {
 		super();
 	}
 
@@ -32,8 +32,11 @@ public class HeaderUodateClassifier extends SingleClassifierEnhancer {
 	 */
 	@Override
 	public void trainOnInstanceImpl(Instance inst) {
-		InstancesHeader header = new InstancesHeader(inst.dataset());
-		this.setModelContext(header);
+		if(this.baseClassifier.getModelContext() == null) {
+			InstancesHeader header = new InstancesHeader(inst.dataset());
+			this.setModelContext(header);
+			this.baseClassifier.setModelContext(header);
+		}
 		super.trainOnInstanceImpl(inst);
 	}
 	

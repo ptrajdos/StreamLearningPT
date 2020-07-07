@@ -1,19 +1,22 @@
-package moa.classifiers.meta;
+package moa.classifiers;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import moa.classifiers.AbstractMultipleClassifierTestCase;
 import moa.classifiers.Classifier;
+import moa.classifiers.OracleClassifier;
 
-public class OnlineAccuracyUpdatedEnsembleSTest extends OnlineAccuracyUpdatedEnsembleTest {
+public class OracleClassifierTest extends AbstractMultipleClassifierTestCase {
 
-	public OnlineAccuracyUpdatedEnsembleSTest(String name) {
+	public OracleClassifierTest(String name) {
 		super(name);
 	}
 
 	@Override
 	protected Classifier[] getRegressionClassifierSetups() {
-		return new Classifier[] {new OnlineAccuracyUpdatedEnsembleS()};
+		return new Classifier[] {new OracleClassifier()};
 	}
+	
 	
 	 /**
 	   * Returns a test suite.
@@ -21,7 +24,7 @@ public class OnlineAccuracyUpdatedEnsembleSTest extends OnlineAccuracyUpdatedEns
 	   * @return		the test suite
 	   */
 	  public static Test suite() {
-	    return new TestSuite(OnlineAccuracyUpdatedEnsembleSTest.class);
+	    return new TestSuite(OracleClassifierTest.class);
 	  }
 
 	  /**
@@ -34,5 +37,4 @@ public class OnlineAccuracyUpdatedEnsembleSTest extends OnlineAccuracyUpdatedEns
 	  }
 
 	
-
 }

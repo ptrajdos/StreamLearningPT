@@ -42,7 +42,7 @@ import moa.tasks.TaskMonitor;
  */
 
 /**
- * This version do the Serialization in a proper way.
+ * This version does the Serialization in a proper way.
  * The source was taken from MOA 2019.05.0 
  * @author pawel trajdos
  * @since 0.0.1
