@@ -50,17 +50,19 @@ public class OracleClassifier extends AbstractClassifier {
 	private void initialise(Instance instance) {
 		if(!this.initialised) {
 			this.numClasses = instance.numClasses();
+			this.initialised=true;
 		}
 	}
 
 	@Override
 	protected Measurement[] getModelMeasurementsImpl() {
-		return null;
+		Measurement[] m = new Measurement[0];
+        return m;
 	}
 
 	@Override
 	public void getModelDescription(StringBuilder out, int indent) {
-		// TODO Auto-generated method stub
+		out.append("An oracle classifier");
 	}
 
 }

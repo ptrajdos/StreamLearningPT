@@ -44,11 +44,11 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 			"trees.HoeffdingTree -e 2000000 -g 100 -c 0.01");
 	
 	public ClassOption qualityCriterionOption = new ClassOption("quality_measure", 'q', "Quality measure to use", QualityMeasure.class,
-			QualityMeasureKappa.class.getCanonicalName());
+			ClassOption.objectToCLIString(new QualityMeasureKappa(), QualityMeasure.class));
 	
 
-	public ClassOption combinerOption = new ClassOption("classifier_combiner", 'c', "Base class", GeneralCombiner.class,
-			new GeneralCombiner().getCLICreationString(ClassifierResponseSimpleCombiner.class) );
+	public ClassOption combinerOption = new ClassOption("classifier_combiner", 'c', "Base classifier combiner", ClassifierResponseSimpleCombiner.class,
+			ClassOption.objectToCLIString(new GeneralCombiner(), ClassifierResponseSimpleCombiner.class) );
 	
 	
 	
@@ -105,8 +105,10 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	
 	private void init() {
 		this.windowSize = (int) this.windowSizeOption.getValue();
-		this.candidate = ((Classifier) getPreparedClassOption(this.learnerOption)).copy();
-		this.candidate.resetLearning();
+		
+		this.initialiseCandidate();
+		
+		
 		
 		int ensembleSize = this.memberCountOption.getValue();
 		this.ensemble = new Classifier[ensembleSize];
@@ -115,9 +117,8 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 		
 		this.confusionMatrices = new ConfusionMatrix[ensembleSize];
 		for(int i=0;i<ensembleSize;i++)
-			this.confusionMatrices[i] = new ConfusionMatrixSimple();
-		this.candidateConfusionMatrix = new ConfusionMatrixSimple();
-		this.candidateConfusionMatrix.setClassifier(this.candidate);
+			this.confusionMatrices[i] = this.getNewConfusionMatrix();
+		
 		
 		this.weights = new double[ensembleSize];
 		Arrays.fill(this.weights, 1.0);
@@ -130,6 +131,17 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 		this.combiner = (GeneralCombiner) getPreparedClassOption(this.combinerOption);
 		
 		
+	}
+	
+	protected ConfusionMatrix getNewConfusionMatrix() {
+		return new ConfusionMatrixSimple();
+	}
+	
+	protected void initialiseCandidate() {
+		this.candidate = ((Classifier) getPreparedClassOption(this.learnerOption)).copy();
+		this.candidate.resetLearning();
+		this.candidateConfusionMatrix = this.getNewConfusionMatrix();
+		this.candidateConfusionMatrix.setClassifier(this.candidate);
 	}
 	
 	
@@ -164,9 +176,10 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	
 	@Override
 	public void trainOnInstanceImpl(Instance inst) {
-		this.candidate.trainOnInstance(inst);
 		
 		this.updateConfusionMatrices(inst);
+		
+		this.candidate.trainOnInstance(inst);
 		
 		this.updateEnsemble(inst);
 		
@@ -188,10 +201,9 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 				this.ensemble[this.activeClassifiers] = this.candidate;
 				this.confusionMatrices[this.activeClassifiers] = this.candidateConfusionMatrix;
 				this.activeClassifiers++;
-				this.candidate = ((Classifier) getPreparedClassOption(this.learnerOption)).copy();
-				this.candidateConfusionMatrix = new ConfusionMatrixSimple();
-				this.candidateConfusionMatrix.setClassifier(this.candidate);
-				this.candidate.resetLearning();
+				
+				this.initialiseCandidate();
+				
 				this.updateWeights();
 			}else {
 				double[] qualities = new double[this.ensemble.length];
@@ -206,10 +218,9 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 				if(minVal < candidateQuality) {
 					this.ensemble[minIndex] = this.candidate;
 					this.confusionMatrices[minIndex] =this.candidateConfusionMatrix;
-					this.candidate = ((Classifier) getPreparedClassOption(this.learnerOption)).copy();
-					this.candidateConfusionMatrix = new ConfusionMatrixSimple();
-					this.candidateConfusionMatrix.setClassifier(this.candidate);
-					this.candidate.resetLearning();
+					
+					this.initialiseCandidate();
+					
 				}
 				
 				this.updateWeights();
@@ -239,12 +250,13 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	protected void resetMatrices() {
 		for(int i=0;i<this.activeClassifiers;i++)
 			this.confusionMatrices[i].reset();
+		this.candidateConfusionMatrix.reset();
 	}
 
 	@Override
 	protected Measurement[] getModelMeasurementsImpl() {
-		// TODO Auto-generated method stub
-		return null;
+		Measurement[] m = new Measurement[0];
+        return m;
 	}
 
 	@Override

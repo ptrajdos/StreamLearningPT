@@ -5,10 +5,11 @@ import java.util.Arrays;
 
 import com.yahoo.labs.samoa.instances.Instance;
 
+import moa.AbstractMOAObject;
 import moa.classifiers.Classifier;
 import weka.core.Utils;
 
-public class ConfusionMatrixSimple implements ConfusionMatrix, Serializable {
+public class ConfusionMatrixSimple extends AbstractMOAObject implements ConfusionMatrix, Serializable {
 
 	
 
@@ -77,6 +78,12 @@ public class ConfusionMatrixSimple implements ConfusionMatrix, Serializable {
 	@Override
 	public double getValue(int predictedClassNum, int trueClassNum) {
 		return this.confusionMatrix[predictedClassNum][trueClassNum];
+	}
+
+	@Override
+	public void getDescription(StringBuilder sb, int indent) {
+		sb.append("Confusion matrix");
+		
 	}
 
 }

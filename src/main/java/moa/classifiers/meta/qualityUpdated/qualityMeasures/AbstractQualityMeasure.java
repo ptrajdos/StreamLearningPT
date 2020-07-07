@@ -28,7 +28,6 @@ public abstract class AbstractQualityMeasure extends AbstractOptionHandler imple
 	@Override
 	public void getDescription(StringBuilder sb, int indent) {
 		// TODO Auto-generated method stub
-
 	}
 
 

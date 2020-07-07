@@ -3,10 +3,7 @@
  */
 package moa.classifiers.meta.qualityUpdated.qualityMeasures;
 
-import java.io.Serializable;
-
 import moa.classifiers.meta.qualityUpdated.ConfusionMatrix;
-import moa.classifiers.meta.qualityUpdated.QualityMeasure;
 import weka.core.Utils;
 
 /**
@@ -56,5 +53,13 @@ public class QualityMeasureAccuracy extends AbstractQualityMeasure {
 	public double worstValue() {
 		return 0.0;
 	}
+
+
+	@Override
+	public void getDescription(StringBuilder sb, int indent) {
+		super.getDescription(sb, indent);
+		sb.append("Accuracy Quality measure");
+	}
+	
 
 }

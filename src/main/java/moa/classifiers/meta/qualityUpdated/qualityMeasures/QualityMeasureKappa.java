@@ -3,10 +3,7 @@
  */
 package moa.classifiers.meta.qualityUpdated.qualityMeasures;
 
-import java.io.Serializable;
-
 import moa.classifiers.meta.qualityUpdated.ConfusionMatrix;
-import moa.classifiers.meta.qualityUpdated.QualityMeasure;
 
 /**
  * Kappa coefficient measure
@@ -69,5 +66,12 @@ public class QualityMeasureKappa extends AbstractQualityMeasure {
 	public double worstValue() {
 		return 0;
 	}
+
+	@Override
+	public void getDescription(StringBuilder sb, int indent) {
+		super.getDescription(sb, indent);
+		sb.append("Kappa Quality measure");
+	}
+	
 
 }

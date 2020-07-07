@@ -3,7 +3,6 @@
  */
 package moa.classifiers.meta.combiners;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import com.github.javacliparser.ClassOption;
@@ -12,6 +11,7 @@ import com.yahoo.labs.samoa.instances.SamoaToWekaInstanceConverter;
 
 import moa.core.ObjectRepository;
 import moa.options.AbstractOptionHandler;
+import moa.options.WEKAClassOption;
 import moa.tasks.TaskMonitor;
 import weka.classifiers.meta.generalOutputCombiners.MeanCombiner;
 import weka.classifiers.meta.generalOutputCombiners.OutputCombiner;
@@ -32,10 +32,18 @@ public class GeneralCombiner extends AbstractOptionHandler implements Classifier
 	 */
 	private static final long serialVersionUID = -2573930501552105657L;
 	
-	public ClassOption internalCombiner = new ClassOption("internal_combiner", 'c', "internal Combiner", OutputCombiner.class,
-			MeanCombiner.class.getCanonicalName());
+	public WEKAClassOption internalCombiner = new WEKAClassOption("internal_combiner", 'c', "internal Combiner", OutputCombiner.class,
+			WEKAClassOption.objectToCLIString(new MeanCombiner(), OutputCombiner.class));
 	
-	private OutputCombiner combiner = new MeanCombiner(); 
+	private OutputCombiner combiner=new MeanCombiner();
+	
+	public GeneralCombiner() {
+		try {
+			this.combiner =(OutputCombiner) WEKAClassOption.cliStringToObject(internalCombiner.getValueAsCLIString(), OutputCombiner.class, null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	@Override
@@ -86,20 +94,6 @@ public class GeneralCombiner extends AbstractOptionHandler implements Classifier
 		
 		
 		return processedPredictions;
-	}
-
-	/**
-	 * @return the combiner
-	 */
-	public OutputCombiner getCombiner() {
-		return this.combiner;
-	}
-
-	/**
-	 * @param combiner the combiner to set
-	 */
-	public void setCombiner(OutputCombiner combiner) {
-		this.combiner = combiner;
 	}
 
 	@Override
