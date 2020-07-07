@@ -179,9 +179,9 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 		
 		this.updateConfusionMatrices(inst);
 		
-		this.candidate.trainOnInstance(inst);
-		
 		this.updateEnsemble(inst);
+		
+		this.candidate.trainOnInstance(inst);
 		
 		
 		this.instancesProcessed++;
@@ -227,10 +227,9 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 				
 			}
 			this.resetMatrices();
-			
-			for(int i=0;i<this.activeClassifiers;i++)
-				this.ensemble[i].trainOnInstance(inst);
-		}	
+		}
+		for(int i=0;i<this.activeClassifiers;i++)
+			this.ensemble[i].trainOnInstance(inst);
 	}
 	
 	protected void updateWeights() {
