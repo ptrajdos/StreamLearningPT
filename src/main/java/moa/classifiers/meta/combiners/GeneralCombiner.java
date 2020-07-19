@@ -87,13 +87,16 @@ public class GeneralCombiner extends AbstractOptionHandler implements Classifier
 		for(int i=0;i<numPredictions;i++) {
 			tmpArray = Arrays.copyOf(rawPredictions[i], numClasses);
 			arraySum = Utils.sum(tmpArray);
-			
+			if(!Utils.eq(arraySum, 0.0)) {
 				if(arraySum<=1) {
 					processedPredictions[i] = UtilsPT.softMax(tmpArray);
 				}else {
 					processedPredictions[i] = tmpArray;
 					Utils.normalize(processedPredictions[i]);
 				}
+			}
+			else
+				processedPredictions[i] = tmpArray;
 		}
 		
 		
