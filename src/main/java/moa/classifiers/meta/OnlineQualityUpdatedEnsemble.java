@@ -65,6 +65,9 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	public FloatOption windowSizeOption = new FloatOption("windowSize", 'w',
 			"The window size used for classifier creation and evaluation.", 100, 1, Integer.MAX_VALUE);
 	
+	public FloatOption qualityThresholdOption = new FloatOption("qualityThreshold", 't',
+			"Threshold for quality measure", 0.5, 0, 1);
+	
 	protected Classifier candidate;
 	
 	protected int windowSize=100;
@@ -81,6 +84,10 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	protected int activeClassifiers =0;
 	
 	protected ClassifierResponseSimpleCombiner combiner;
+	
+	protected double qualityThreshold=0.5;
+	
+	protected double eps=1e-6;
 
 	/**
 	 * 
@@ -130,6 +137,7 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 		
 		this.combiner = (GeneralCombiner) getPreparedClassOption(this.combinerOption);
 		
+		this.qualityThreshold = this.qualityThresholdOption.getValue();
 		
 	}
 	
@@ -234,14 +242,33 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	
 	protected void updateWeights() {
 		double[] newWeights = new double[this.ensemble.length];
+		double[] qualities =  new double[this.ensemble.length];
 		for(int i=0;i<this.ensemble.length;i++) {
-			if(i <this.activeClassifiers)
-				newWeights[i] = this.qualityMeasure.getMeasure(this.confusionMatrices[i]);
+			if(i <this.activeClassifiers) {
+				qualities[i] = this.qualityMeasure.getMeasure(this.confusionMatrices[i]);
+				newWeights[i] = qualities[i]>this.qualityThreshold? qualities[i]:0;
+			}
 			else
 				newWeights[i]=0;
 		}
 		
-		Utils.normalize(newWeights);
+		double weiSum = Utils.sum(newWeights);
+		if(weiSum>this.eps) {
+			Utils.normalize(newWeights);
+		}else {
+			double qsum = Utils.sum(qualities);
+			if(qsum>this.eps) {
+				Utils.normalize(qualities);
+				newWeights = qualities;
+			}else {
+				newWeights = new double[this.ensemble.length];
+				Arrays.fill(newWeights, 1.0/this.ensemble.length);
+			}
+			
+			
+		}
+		
+		
 		
 		this.weights = newWeights;
 	}

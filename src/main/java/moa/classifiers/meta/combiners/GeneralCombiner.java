@@ -37,9 +37,11 @@ public class GeneralCombiner extends AbstractOptionHandler implements Classifier
 	
 	private OutputCombiner combiner=new MeanCombiner();
 	
+	protected double eps=1E-6;
+	
 	public GeneralCombiner() {
 		try {
-			this.combiner =(OutputCombiner) WEKAClassOption.cliStringToObject(internalCombiner.getValueAsCLIString(), OutputCombiner.class, null);
+			this.combiner =(OutputCombiner) WEKAClassOption.cliStringToObject(this.internalCombiner.getValueAsCLIString(), OutputCombiner.class, null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,10 +87,13 @@ public class GeneralCombiner extends AbstractOptionHandler implements Classifier
 		for(int i=0;i<numPredictions;i++) {
 			tmpArray = Arrays.copyOf(rawPredictions[i], numClasses);
 			arraySum = Utils.sum(tmpArray);
-			if(!Utils.eq(arraySum, 0.0))
-				processedPredictions[i] = UtilsPT.softMax(tmpArray);
-			else
-				processedPredictions[i] = tmpArray;
+			
+				if(arraySum<=1) {
+					processedPredictions[i] = UtilsPT.softMax(tmpArray);
+				}else {
+					processedPredictions[i] = tmpArray;
+					Utils.normalize(processedPredictions[i]);
+				}
 		}
 		
 		
