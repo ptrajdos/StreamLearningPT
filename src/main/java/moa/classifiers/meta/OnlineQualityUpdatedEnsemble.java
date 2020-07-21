@@ -93,7 +93,7 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	 * 
 	 */
 	public OnlineQualityUpdatedEnsemble() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	
 	@Override
@@ -110,7 +110,7 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 	}
 
 	
-	private void init() {
+	protected void init() {
 		this.windowSize = (int) this.windowSizeOption.getValue();
 		
 		this.initialiseCandidate();
@@ -236,6 +236,11 @@ public class OnlineQualityUpdatedEnsemble extends AbstractClassifier implements 
 			}
 			this.resetMatrices();
 		}
+		this.trainEnsembleMembersOnInstance(inst);
+		
+	}
+	
+	protected void trainEnsembleMembersOnInstance(Instance inst) {
 		for(int i=0;i<this.activeClassifiers;i++)
 			this.ensemble[i].trainOnInstance(inst);
 	}
